@@ -13,6 +13,10 @@ func main() {
 
 	r.HandleFunc("/test-cred", controller.GetToken).Methods("GET")
 
+	r.HandleFunc("/login", controller.Login).Methods("GET")
+
+	r.HandleFunc("/callback", controller.CallbackLogin).Methods("GET")
+
 	http.Handle("/", r)
 
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", r))
