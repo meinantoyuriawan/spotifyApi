@@ -88,7 +88,7 @@ func redirectAuthByCode(r *http.Request) string {
 	redirect_uri := "http://localhost:8080/callback"
 	state := "abc123"
 	scope := "user-read-private user-read-email"
-	id := "649eae22903b427caaf7bd76711a2ae5"
+	id := "" //client id
 
 	q := r.URL.Query()
 	q.Add("response_type", "code")
@@ -115,6 +115,7 @@ func CallbackAuthByCode(r *http.Request) (string, error) {
 	}
 
 	AccToken, err := getTokenAuthByCode(code)
+	// fmt.Println(AccToken)
 
 	if err != nil {
 		return "", err

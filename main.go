@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/meinantoyuriawan/spotifyApi/controller"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -15,9 +16,19 @@ func main() {
 
 	r.HandleFunc("/login", controller.Login).Methods("GET")
 
+	r.HandleFunc("/login-error", controller.DisplayError).Methods("GET")
+
 	r.HandleFunc("/callback", controller.CallbackLogin).Methods("GET")
 
-	http.Handle("/", r)
+	r.HandleFunc("/getuser", controller.GetUser).Methods("GET")
 
-	log.Fatal(http.ListenAndServe("0.0.0.0:8080", r))
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8080"},
+		AllowCredentials: true,
+	})
+
+	// http.Handle("/", r)
+	handler := c.Handler(r)
+
+	log.Fatal(http.ListenAndServe("0.0.0.0:8080", handler))
 }

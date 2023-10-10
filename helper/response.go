@@ -15,6 +15,6 @@ func ResponseJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func CreateErrorResponse(w http.ResponseWriter, message string, code int) {
-	response := map[string]string{"message": message}
+	response := map[string]string{"error": message}
 	ResponseJSON(w, code, response)
 }
