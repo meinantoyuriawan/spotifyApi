@@ -20,7 +20,11 @@ func main() {
 
 	r.HandleFunc("/callback", controller.CallbackLogin).Methods("GET")
 
-	r.HandleFunc("/getuser", controller.GetUser).Methods("GET")
+	r.HandleFunc("/get-user", controller.GetUser).Methods("GET")
+
+	r.HandleFunc("/get-top-artist", controller.GetTopArtist).Methods("GET")
+
+	r.HandleFunc("/get-top-tracks", controller.GetTopTracks).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:8080"},

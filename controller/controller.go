@@ -46,6 +46,16 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	user.GetUserProfile()
 }
 
+func GetTopArtist(w http.ResponseWriter, r *http.Request) {
+
+	// user.GetUserTop(w)
+}
+
+func GetTopTracks(w http.ResponseWriter, r *http.Request) {
+
+	user.GetUserTopTracks(w)
+}
+
 func DisplayError(w http.ResponseWriter, r *http.Request) {
 	helper.CreateErrorResponse(w, "state_mismatch", http.StatusBadRequest)
 }

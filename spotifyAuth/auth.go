@@ -1,7 +1,6 @@
 package spotifyauth
 
 import (
-	b64 "encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +8,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/meinantoyuriawan/spotifyApi/helper"
 )
 
 type TokenResponse struct {
@@ -29,14 +30,7 @@ func GetTokenClientCred() (string, error) {
 
 	url := "https://accounts.spotify.com/api/token"
 
-	CLIENT_ID := ""
-	CLIENT_SECRET := ""
-
-	strSecret := CLIENT_ID + ":" + CLIENT_SECRET
-
-	sEnc := b64.StdEncoding.EncodeToString([]byte(strSecret))
-
-	Authorization := "Basic " + string(sEnc)
+	Authorization := helper.GenerateBasicToken()
 
 	payload := strings.NewReader("grant_type=client_credentials")
 	req, err := http.NewRequest("POST", url, payload)
@@ -87,8 +81,8 @@ func TriggerAuthByCode() (string, error) {
 func redirectAuthByCode(r *http.Request) string {
 	redirect_uri := "http://localhost:8080/callback"
 	state := "abc123"
-	scope := "user-read-private user-read-email"
-	id := "" //client id
+	scope := "user-read-private user-read-email user-top-read user-read-recently-played"
+	id := " " //client id
 
 	q := r.URL.Query()
 	q.Add("response_type", "code")
@@ -143,14 +137,7 @@ func getTokenAuthByCode(code string) (string, error) {
 		return "", err
 	}
 
-	CLIENT_ID := ""
-	CLIENT_SECRET := ""
-
-	strSecret := CLIENT_ID + ":" + CLIENT_SECRET
-
-	sEnc := b64.StdEncoding.EncodeToString([]byte(strSecret))
-
-	Authorization := "Basic " + string(sEnc)
+	Authorization := helper.GenerateBasicToken()
 
 	req.Header.Add("Authorization", Authorization)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
