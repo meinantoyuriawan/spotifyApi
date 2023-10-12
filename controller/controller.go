@@ -43,7 +43,7 @@ func CallbackLogin(w http.ResponseWriter, r *http.Request) {
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
 
-	user.GetUserProfile()
+	user.GetUserProfile(w)
 }
 
 func GetTopArtist(w http.ResponseWriter, r *http.Request) {

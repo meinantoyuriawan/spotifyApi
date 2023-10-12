@@ -2,51 +2,24 @@ package user
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/meinantoyuriawan/spotifyApi/helper"
 )
 
-func GetUserProfile() {
+// todo:
+// error handling user
+func GetUserProfile(w http.ResponseWriter) {
 
 	isLogin, AccessToken := isLogin()
 
 	if !isLogin {
 		fmt.Println(AccessToken)
+	} else {
+		Profile := userProfile(AccessToken)
+
+		helper.ResponseJSON(w, http.StatusOK, Profile)
 	}
-
-	url := "https://api.spotify.com/v1/me"
-
-	Authorization := "Bearer " + AccessToken
-
-	req, err := http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	req.Header.Set("Authorization", Authorization)
-
-	client := &http.Client{}
-	res, err := client.Do(req)
-
-	if err != nil {
-		// return "", err
-		fmt.Println("err resp")
-	}
-
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		// return "", err
-		fmt.Println("err Read")
-	}
-
-	s := string(body)
-
-	fmt.Println(s)
 }
 
 // todo:
