@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"bufio"
 	"os"
 )
 
@@ -30,4 +31,36 @@ func ReadToken() string {
 	}
 
 	return string(Token)
+}
+
+func getClientConfig() []string {
+	filePath := "config.txt"
+	readFile, err := os.Open(filePath)
+
+	if err != nil {
+		return nil
+	}
+
+	fileScanner := bufio.NewScanner(readFile)
+	fileScanner.Split(bufio.ScanLines)
+
+	var fileLines []string
+
+	for fileScanner.Scan() {
+		fileLines = append(fileLines, fileScanner.Text())
+	}
+
+	readFile.Close()
+
+	return fileLines
+}
+
+func GetClientID() string {
+	clientConfig := getClientConfig()
+	return clientConfig[0]
+}
+
+func GetClientSecret() string {
+	clientConfig := getClientConfig()
+	return clientConfig[1]
 }

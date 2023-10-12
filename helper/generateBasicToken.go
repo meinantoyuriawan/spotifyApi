@@ -5,8 +5,8 @@ import (
 )
 
 func GenerateBasicToken() string {
-	CLIENT_ID := " "
-	CLIENT_SECRET := " "
+	CLIENT_ID := GetClientID()
+	CLIENT_SECRET := GetClientSecret()
 
 	strSecret := CLIENT_ID + ":" + CLIENT_SECRET
 

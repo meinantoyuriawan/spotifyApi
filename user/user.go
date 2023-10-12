@@ -13,7 +13,7 @@ func GetUserProfile() {
 	isLogin, AccessToken := isLogin()
 
 	if !isLogin {
-		fmt.Println("not logged in")
+		fmt.Println(AccessToken)
 	}
 
 	url := "https://api.spotify.com/v1/me"
@@ -73,8 +73,8 @@ func isLogin() (bool, string) {
 	AccToken := helper.ReadToken()
 
 	if AccToken == "" {
-		fmt.Println("user not logged in, go to /login")
-		return false, ""
+		// fmt.Println("user not logged in, go to /login")
+		return false, "user not logged in, go to /login"
 	}
 
 	return true, AccToken
