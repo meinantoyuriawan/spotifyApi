@@ -10,21 +10,8 @@ import (
 	"strings"
 
 	"github.com/meinantoyuriawan/spotifyApi/helper"
+	"github.com/meinantoyuriawan/spotifyApi/models"
 )
-
-type TokenResponse struct {
-	Token string `json:"access_token"`
-	Type  string `json:"token_type"`
-	Time  int    `json:"expires_in"`
-}
-
-type CallBackLoginResponse struct {
-	AccToken     string `json:"access_token"`
-	TokenType    string `json:"token_type"`
-	Scope        string `json:"scope"`
-	Time         int    `json:"expires_in"`
-	TokenRefresh string `json:"refresh_token"`
-}
 
 func GetTokenClientCred() (string, error) {
 
@@ -55,7 +42,7 @@ func GetTokenClientCred() (string, error) {
 
 	s := string(body)
 
-	data := TokenResponse{}
+	data := models.TokenResponse{}
 	err = json.Unmarshal([]byte(s), &data)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -155,7 +142,7 @@ func getTokenAuthByCode(code string) (string, error) {
 
 	s := string(body)
 
-	dataResp := CallBackLoginResponse{}
+	dataResp := models.CallBackLoginResponse{}
 	err = json.Unmarshal([]byte(s), &dataResp)
 	if err != nil {
 		return "", err
