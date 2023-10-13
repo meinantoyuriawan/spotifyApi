@@ -22,7 +22,9 @@ func main() {
 
 	r.HandleFunc("/get-user", controller.GetUser).Methods("GET")
 
-	r.HandleFunc("/get-top-artist", controller.GetTopArtist).Methods("GET")
+	r.HandleFunc("/get-top-artist", controller.GetTopArtistDefault).Methods("GET")
+
+	r.HandleFunc("/get-top-artist/{term}/{limit}", controller.GetTopArtist).Methods("GET")
 
 	r.HandleFunc("/get-top-tracks", controller.GetTopTracksDefault).Methods("GET")
 

@@ -9,8 +9,8 @@ import (
 	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-func topTracks(AccessToken, term, limit string) models.UserTrack {
-	url := "https://api.spotify.com/v1/me/top/tracks"
+func topArtists(AccessToken, term, limit string) models.Artists {
+	url := "https://api.spotify.com/v1/me/top/artists"
 
 	Authorization := "Bearer " + AccessToken
 
@@ -53,7 +53,7 @@ func topTracks(AccessToken, term, limit string) models.UserTrack {
 
 	s := string(body)
 
-	dataResp := models.UserTrack{}
+	dataResp := models.Artists{}
 	err = json.Unmarshal([]byte(s), &dataResp)
 	if err != nil {
 		fmt.Println(err)

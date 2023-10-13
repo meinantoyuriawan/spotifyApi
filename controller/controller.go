@@ -55,9 +55,31 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetTopArtistDefault(w http.ResponseWriter, r *http.Request) {
+
+	term := "medium"
+	limit := "10"
+
+	TopArtists := user.GetUserTopArtists(term, limit)
+	if reflect.DeepEqual(TopArtists, models.UserTrack{}) {
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	} else {
+		helper.ResponseJSON(w, http.StatusOK, TopArtists)
+	}
+}
+
 func GetTopArtist(w http.ResponseWriter, r *http.Request) {
 
-	// user.GetUserTop(w)
+	params := mux.Vars(r)
+	term := params["term"]
+	limit := params["limit"]
+
+	TopArtists := user.GetUserTopArtists(term, limit)
+	if reflect.DeepEqual(TopArtists, models.UserTrack{}) {
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	} else {
+		helper.ResponseJSON(w, http.StatusOK, TopArtists)
+	}
 }
 
 func GetTopTracksDefault(w http.ResponseWriter, r *http.Request) {
