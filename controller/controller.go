@@ -55,57 +55,43 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetTopArtistDefault(w http.ResponseWriter, r *http.Request) {
-
-	term := "medium"
-	limit := "10"
-
-	TopArtists := user.GetUserTopArtists(term, limit)
-	if reflect.DeepEqual(TopArtists, models.UserTrack{}) {
-		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
-	} else {
-		helper.ResponseJSON(w, http.StatusOK, TopArtists)
-	}
-}
-
-func GetTopArtist(w http.ResponseWriter, r *http.Request) {
+func GetUserTop(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
+	reqType := params["type"]
 	term := params["term"]
 	limit := params["limit"]
 
-	TopArtists := user.GetUserTopArtists(term, limit)
-	if reflect.DeepEqual(TopArtists, models.UserTrack{}) {
-		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
-	} else {
-		helper.ResponseJSON(w, http.StatusOK, TopArtists)
-	}
+	createUserTopLogic(reqType, term, limit, w)
 }
 
-func GetTopTracksDefault(w http.ResponseWriter, r *http.Request) {
+func GetUserTopDefault(w http.ResponseWriter, r *http.Request) {
 
+	params := mux.Vars(r)
+	reqType := params["type"]
 	term := "medium"
 	limit := "10"
 
-	TopTracks := user.GetUserTopTracks(term, limit)
-	if reflect.DeepEqual(TopTracks, models.UserTrack{}) {
-		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
-	} else {
-		helper.ResponseJSON(w, http.StatusOK, TopTracks)
-	}
+	createUserTopLogic(reqType, term, limit, w)
 }
 
-func GetTopTracks(w http.ResponseWriter, r *http.Request) {
-
-	params := mux.Vars(r)
-	term := params["term"]
-	limit := params["limit"]
-
-	TopTracks := user.GetUserTopTracks(term, limit)
-	if reflect.DeepEqual(TopTracks, models.UserTrack{}) {
-		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+func createUserTopLogic(reqType, term, limit string, w http.ResponseWriter) {
+	if reqType == "tracks" {
+		TopTracks := user.GetUserTopTracks(term, limit)
+		if reflect.DeepEqual(TopTracks, models.UserTrack{}) {
+			helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+		} else {
+			helper.ResponseJSON(w, http.StatusOK, TopTracks)
+		}
+	} else if reqType == "artists" {
+		TopArtists := user.GetUserTopArtists(term, limit)
+		if reflect.DeepEqual(TopArtists, models.UserTrack{}) {
+			helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+		} else {
+			helper.ResponseJSON(w, http.StatusOK, TopArtists)
+		}
 	} else {
-		helper.ResponseJSON(w, http.StatusOK, TopTracks)
+		helper.CreateErrorResponse(w, "Wrong params", http.StatusBadRequest)
 	}
 }
 

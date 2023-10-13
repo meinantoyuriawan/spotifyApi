@@ -37,14 +37,11 @@ func GetUserTopTracks(term, limit string) models.UserTrack {
 		// returning empty UserTracks
 		return UserTracks
 	}
-
 	UserTracks = topTracks(AccessToken, term, limit)
 
 	return UserTracks
 }
 
-// todo:
-// Get User Top Artist
 func GetUserTopArtists(term, limit string) models.Artists {
 
 	//get token
@@ -57,10 +54,7 @@ func GetUserTopArtists(term, limit string) models.Artists {
 	if !isLogin {
 		// returning empty UserTracks
 		return Artists
-		// fmt.Println("gg")
 	}
-
-	// UserTracks = topArtists(AccessToken)
 	Artists = topArtists(AccessToken, term, limit)
 
 	return Artists

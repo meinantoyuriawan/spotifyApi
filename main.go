@@ -22,13 +22,9 @@ func main() {
 
 	r.HandleFunc("/get-user", controller.GetUser).Methods("GET")
 
-	r.HandleFunc("/get-top-artist", controller.GetTopArtistDefault).Methods("GET")
+	r.HandleFunc("/get-top/{type}/{term}/{limit}", controller.GetUserTop).Methods("GET")
 
-	r.HandleFunc("/get-top-artist/{term}/{limit}", controller.GetTopArtist).Methods("GET")
-
-	r.HandleFunc("/get-top-tracks", controller.GetTopTracksDefault).Methods("GET")
-
-	r.HandleFunc("/get-top-tracks/{term}/{limit}", controller.GetTopTracks).Methods("GET")
+	r.HandleFunc("/get-top/{type}", controller.GetUserTopDefault).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:8080"},
