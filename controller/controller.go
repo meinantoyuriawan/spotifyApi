@@ -5,6 +5,7 @@ import (
 
 	"reflect"
 
+	"github.com/gorilla/mux"
 	"github.com/meinantoyuriawan/spotifyApi/helper"
 	"github.com/meinantoyuriawan/spotifyApi/models"
 	spotifyauth "github.com/meinantoyuriawan/spotifyApi/spotifyAuth"
@@ -59,9 +60,26 @@ func GetTopArtist(w http.ResponseWriter, r *http.Request) {
 	// user.GetUserTop(w)
 }
 
+func GetTopTracksDefault(w http.ResponseWriter, r *http.Request) {
+
+	term := "medium"
+	limit := "10"
+
+	TopTracks := user.GetUserTopTracks(term, limit)
+	if reflect.DeepEqual(TopTracks, models.UserTrack{}) {
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	} else {
+		helper.ResponseJSON(w, http.StatusOK, TopTracks)
+	}
+}
+
 func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 
-	TopTracks := user.GetUserTopTracks()
+	params := mux.Vars(r)
+	term := params["term"]
+	limit := params["limit"]
+
+	TopTracks := user.GetUserTopTracks(term, limit)
 	if reflect.DeepEqual(TopTracks, models.UserTrack{}) {
 		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
 	} else {

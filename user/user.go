@@ -24,9 +24,7 @@ func GetUserProfile() models.Profile {
 	return Profile
 }
 
-// todo:
-// custom time range, limit and offset
-func GetUserTopTracks() models.UserTrack {
+func GetUserTopTracks(term, limit string) models.UserTrack {
 
 	//get token
 	AccessToken := helper.ReadToken()
@@ -40,7 +38,7 @@ func GetUserTopTracks() models.UserTrack {
 		return UserTracks
 	}
 
-	UserTracks = topTracks(AccessToken)
+	UserTracks = topTracks(AccessToken, term, limit)
 
 	return UserTracks
 }

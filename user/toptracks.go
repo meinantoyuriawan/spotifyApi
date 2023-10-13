@@ -9,16 +9,22 @@ import (
 	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-func topTracks(AccessToken string) models.UserTrack {
+func topTracks(AccessToken, term, limit string) models.UserTrack {
 	url := "https://api.spotify.com/v1/me/top/tracks"
 
 	Authorization := "Bearer " + AccessToken
 
 	req, err := http.NewRequest("GET", url, nil)
 
+	if term == "short" {
+		term = "short_term"
+	} else {
+		term = "medium_term"
+	}
+
 	q := req.URL.Query()
-	q.Add("time_range", "short_term")
-	q.Add("limit", "10")
+	q.Add("time_range", term)
+	q.Add("limit", limit)
 	q.Add("offset", "0")
 
 	req.URL.RawQuery = q.Encode()
