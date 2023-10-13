@@ -1,60 +1,53 @@
 package user
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/meinantoyuriawan/spotifyApi/helper"
+	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-// todo:
-// error handling user
-func GetUserProfile(w http.ResponseWriter) {
+func GetUserProfile() models.Profile {
 
 	//get token
 	AccessToken := helper.ReadToken()
 
 	isLogin := isLogin(AccessToken)
 
-	if !isLogin {
-		fmt.Println(AccessToken)
-	} else {
-		Profile := userProfile(AccessToken)
+	Profile := models.Profile{}
 
-		helper.ResponseJSON(w, http.StatusOK, Profile)
+	if !isLogin {
+		// returning empty Profile
+		return Profile
 	}
+
+	Profile = userProfile(AccessToken)
+
+	return Profile
 }
 
 // todo:
-// error handling user top tracks
 // custom time range, limit and offset
-func GetUserTopTracks(w http.ResponseWriter) {
+func GetUserTopTracks() models.UserTrack {
 
 	//get token
 	AccessToken := helper.ReadToken()
 
 	isLogin := isLogin(AccessToken)
 
+	UserTracks := models.UserTrack{}
+
 	if !isLogin {
-		fmt.Println("not logged in")
+		// returning empty UserTracks
+		return UserTracks
 	}
 
-	userTracks := topTracks(AccessToken)
+	UserTracks = topTracks(AccessToken)
 
-	helper.ResponseJSON(w, http.StatusOK, userTracks)
+	return UserTracks
 }
 
 //todo:
 // Get User Top Artist
 
 func isLogin(AccToken string) bool {
-
-	// if AccToken == "" {
-	// 	return false
-	// }
-
-	// return true
-
 	return AccToken != ""
-
 }

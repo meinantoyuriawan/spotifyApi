@@ -9,20 +9,6 @@ import (
 	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-// type Artist struct {
-// 	ArtistName string `json:"name"`
-// }
-
-// type TrackItems struct {
-// 	Artists    []Artist `json:"artists"`
-// 	Href       string   `json:"href"`
-// 	TrackTitle string   `json:"name"`
-// }
-
-// type UserTrack struct {
-// 	Items []TrackItems `json:"items"`
-// }
-
 func topTracks(AccessToken string) models.UserTrack {
 	url := "https://api.spotify.com/v1/me/top/tracks"
 
@@ -77,10 +63,6 @@ func topTracks(AccessToken string) models.UserTrack {
 
 		TopUserTracksResponse.Items = append(TopUserTracksResponse.Items, TopTrackResponse)
 	}
-
-	response, _ := json.Marshal(TopUserTracksResponse)
-
-	fmt.Println(string(response))
 
 	return TopUserTracksResponse
 }

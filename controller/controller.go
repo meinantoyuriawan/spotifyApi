@@ -3,7 +3,10 @@ package controller
 import (
 	"net/http"
 
+	"reflect"
+
 	"github.com/meinantoyuriawan/spotifyApi/helper"
+	"github.com/meinantoyuriawan/spotifyApi/models"
 	spotifyauth "github.com/meinantoyuriawan/spotifyApi/spotifyAuth"
 	"github.com/meinantoyuriawan/spotifyApi/user"
 )
@@ -42,7 +45,13 @@ func CallbackLogin(w http.ResponseWriter, r *http.Request) {
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
 
-	user.GetUserProfile(w)
+	UserProfile := user.GetUserProfile()
+	if reflect.DeepEqual(UserProfile, models.Profile{}) {
+		// fmt.Println("halo")
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	} else {
+		helper.ResponseJSON(w, http.StatusOK, UserProfile)
+	}
 }
 
 func GetTopArtist(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +61,12 @@ func GetTopArtist(w http.ResponseWriter, r *http.Request) {
 
 func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 
-	user.GetUserTopTracks(w)
+	TopTracks := user.GetUserTopTracks()
+	if reflect.DeepEqual(TopTracks, models.UserTrack{}) {
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	} else {
+		helper.ResponseJSON(w, http.StatusOK, TopTracks)
+	}
 }
 
 func DisplayError(w http.ResponseWriter, r *http.Request) {

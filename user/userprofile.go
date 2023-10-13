@@ -9,21 +9,6 @@ import (
 	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-// type Url struct {
-// 	UrlProfile string `json:"spotify"`
-// }
-
-// type Image struct {
-// 	ImageUrl string `json:"url"`
-// }
-
-// type Profile struct {
-// 	Name   string  `json:"display_name"`
-// 	Urls   Url     `json:"external_urls"`
-// 	Images []Image `json:"images"`
-// 	Email  string  `json:"email"`
-// }
-
 func userProfile(AccessToken string) models.Profile {
 	url := "https://api.spotify.com/v1/me"
 
