@@ -23,7 +23,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	url, err := spotifyauth.TriggerAuthByCode()
 
 	if err != nil {
-		// helper.CreateErrorResponse(w, err.Error(), http.StatusBadRequest)
 		http.Redirect(w, r, "/login-error", http.StatusSeeOther)
 	}
 

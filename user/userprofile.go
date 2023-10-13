@@ -5,24 +5,26 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-type Url struct {
-	UrlProfile string `json:"spotify"`
-}
+// type Url struct {
+// 	UrlProfile string `json:"spotify"`
+// }
 
-type Image struct {
-	ImageUrl string `json:"url"`
-}
+// type Image struct {
+// 	ImageUrl string `json:"url"`
+// }
 
-type Profile struct {
-	Name   string  `json:"display_name"`
-	Urls   Url     `json:"external_urls"`
-	Images []Image `json:"images"`
-	Email  string  `json:"email"`
-}
+// type Profile struct {
+// 	Name   string  `json:"display_name"`
+// 	Urls   Url     `json:"external_urls"`
+// 	Images []Image `json:"images"`
+// 	Email  string  `json:"email"`
+// }
 
-func userProfile(AccessToken string) Profile {
+func userProfile(AccessToken string) models.Profile {
 	url := "https://api.spotify.com/v1/me"
 
 	Authorization := "Bearer " + AccessToken
@@ -53,7 +55,7 @@ func userProfile(AccessToken string) Profile {
 
 	s := string(body)
 
-	dataResp := Profile{}
+	dataResp := models.Profile{}
 	err = json.Unmarshal([]byte(s), &dataResp)
 	if err != nil {
 		fmt.Println(err)

@@ -11,7 +11,10 @@ import (
 // error handling user
 func GetUserProfile(w http.ResponseWriter) {
 
-	isLogin, AccessToken := isLogin()
+	//get token
+	AccessToken := helper.ReadToken()
+
+	isLogin := isLogin(AccessToken)
 
 	if !isLogin {
 		fmt.Println(AccessToken)
@@ -27,7 +30,10 @@ func GetUserProfile(w http.ResponseWriter) {
 // custom time range, limit and offset
 func GetUserTopTracks(w http.ResponseWriter) {
 
-	isLogin, AccessToken := isLogin()
+	//get token
+	AccessToken := helper.ReadToken()
+
+	isLogin := isLogin(AccessToken)
 
 	if !isLogin {
 		fmt.Println("not logged in")
@@ -41,15 +47,14 @@ func GetUserTopTracks(w http.ResponseWriter) {
 //todo:
 // Get User Top Artist
 
-func isLogin() (bool, string) {
-	//get token
-	AccToken := helper.ReadToken()
+func isLogin(AccToken string) bool {
 
-	if AccToken == "" {
-		// fmt.Println("user not logged in, go to /login")
-		return false, "user not logged in, go to /login"
-	}
+	// if AccToken == "" {
+	// 	return false
+	// }
 
-	return true, AccToken
+	// return true
+
+	return AccToken != ""
 
 }

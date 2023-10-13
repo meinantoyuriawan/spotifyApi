@@ -5,23 +5,25 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/meinantoyuriawan/spotifyApi/models"
 )
 
-type Artist struct {
-	ArtistName string `json:"name"`
-}
+// type Artist struct {
+// 	ArtistName string `json:"name"`
+// }
 
-type TrackItems struct {
-	Artists    []Artist `json:"artists"`
-	Href       string   `json:"href"`
-	TrackTitle string   `json:"name"`
-}
+// type TrackItems struct {
+// 	Artists    []Artist `json:"artists"`
+// 	Href       string   `json:"href"`
+// 	TrackTitle string   `json:"name"`
+// }
 
-type UserTrack struct {
-	Items []TrackItems `json:"items"`
-}
+// type UserTrack struct {
+// 	Items []TrackItems `json:"items"`
+// }
 
-func topTracks(AccessToken string) UserTrack {
+func topTracks(AccessToken string) models.UserTrack {
 	url := "https://api.spotify.com/v1/me/top/tracks"
 
 	Authorization := "Bearer " + AccessToken
@@ -59,14 +61,14 @@ func topTracks(AccessToken string) UserTrack {
 
 	s := string(body)
 
-	dataResp := UserTrack{}
+	dataResp := models.UserTrack{}
 	err = json.Unmarshal([]byte(s), &dataResp)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	TopUserTracksResponse := UserTrack{}
-	TopTrackResponse := TrackItems{}
+	TopUserTracksResponse := models.UserTrack{}
+	TopTrackResponse := models.TrackItems{}
 
 	for _, dataItems := range dataResp.Items {
 		TopTrackResponse.Artists = dataItems.Artists
