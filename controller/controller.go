@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/meinantoyuriawan/spotifyApi/helper"
 	"github.com/meinantoyuriawan/spotifyApi/models"
+	"github.com/meinantoyuriawan/spotifyApi/recommendations"
 	spotifyauth "github.com/meinantoyuriawan/spotifyApi/spotifyAuth"
 	"github.com/meinantoyuriawan/spotifyApi/user"
 )
@@ -85,13 +86,22 @@ func createUserTopLogic(reqType, term, limit string, w http.ResponseWriter) {
 		}
 	} else if reqType == "artists" {
 		TopArtists := user.GetUserTopArtists(term, limit)
-		if reflect.DeepEqual(TopArtists, models.UserTrack{}) {
+		if reflect.DeepEqual(TopArtists, models.Artists{}) {
 			helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
 		} else {
 			helper.ResponseJSON(w, http.StatusOK, TopArtists)
 		}
 	} else {
 		helper.CreateErrorResponse(w, "Wrong params", http.StatusBadRequest)
+	}
+}
+
+func GetRecommendationArtist(w http.ResponseWriter, r *http.Request) {
+	UserRec := recommendations.GetTrackRecommendations()
+	if reflect.DeepEqual(UserRec, models.BySeedsRecommendation{}) {
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	} else {
+		helper.ResponseJSON(w, http.StatusOK, UserRec)
 	}
 }
 

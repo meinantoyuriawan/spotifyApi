@@ -7,6 +7,7 @@ type ArtistUrl struct {
 type ArtistItems struct {
 	Genres    []string  `json:"genres"`
 	Artists   string    `json:"name"`
+	Id        string    `json:"id"`
 	ArtistUrl ArtistUrl `json:"external_urls"`
 }
 
