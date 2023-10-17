@@ -35,12 +35,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func CallbackLogin(w http.ResponseWriter, r *http.Request) {
-	AccToken, err := spotifyauth.CallbackAuthByCode(r)
+	AccToken, RefreshToken, err := spotifyauth.CallbackAuthByCode(r)
 
 	if err != nil || AccToken == "" {
 		helper.CreateErrorResponse(w, "invalid token", http.StatusBadRequest)
 	} else {
 		helper.WriteToken(AccToken)
+		helper.WriteRefreshToken(RefreshToken)
 		helper.ResponseJSON(w, http.StatusOK, AccToken)
 	}
 }
@@ -100,6 +101,7 @@ func GetRecommendationArtist(w http.ResponseWriter, r *http.Request) {
 	UserRec := recommendations.GetTrackRecommendations()
 	if reflect.DeepEqual(UserRec, models.BySeedsRecommendation{}) {
 		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+		// can be redirected to refresh token
 	} else {
 		helper.ResponseJSON(w, http.StatusOK, UserRec)
 	}
@@ -107,4 +109,20 @@ func GetRecommendationArtist(w http.ResponseWriter, r *http.Request) {
 
 func DisplayError(w http.ResponseWriter, r *http.Request) {
 	helper.CreateErrorResponse(w, "state_mismatch", http.StatusBadRequest)
+}
+
+func RefreshToken(w http.ResponseWriter, r *http.Request) {
+	refreshToken := helper.ReadRefreshToken()
+
+	if refreshToken == "" {
+		helper.CreateErrorResponse(w, "User not logged in", http.StatusBadRequest)
+	}
+
+	newAccessToken, err := spotifyauth.Refresh(refreshToken)
+	if err != nil || newAccessToken == "" {
+		helper.CreateErrorResponse(w, "invalid Refresh Token", http.StatusBadRequest)
+	} else {
+		helper.WriteToken(newAccessToken)
+		helper.ResponseJSON(w, http.StatusOK, newAccessToken)
+	}
 }

@@ -22,3 +22,5 @@ go.work
 
 config.txt
 token.txt
+refreshtoken.txt
+*.env

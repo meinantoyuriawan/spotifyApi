@@ -85,34 +85,78 @@ func redirectAuthByCode(r *http.Request) string {
 	// http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
 }
 
-func CallbackAuthByCode(r *http.Request) (string, error) {
+func CallbackAuthByCode(r *http.Request) (string, string, error) {
 
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
 
 	if state == "" {
 		// helper.CreateErrorResponse(w, "state_mismatch", http.StatusBadRequest)
-		return "", errors.New("state_mismatch")
+		return "", "", errors.New("state_mismatch")
 	}
 
-	AccToken, err := getTokenAuthByCode(code)
+	AccToken, RefreshToken, err := getTokenAuthByCode(code)
 	// fmt.Println(AccToken)
 
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return AccToken, nil
+	return AccToken, RefreshToken, nil
 
 }
 
-func getTokenAuthByCode(code string) (string, error) {
+func getTokenAuthByCode(code string) (string, string, error) {
 	redirect_uri := "http://localhost:8080/callback"
 
 	data := url.Values{}
 	data.Set("code", code)
 	data.Set("redirect_uri", redirect_uri)
 	data.Set("grant_type", "authorization_code")
+
+	encodedData := data.Encode()
+
+	url := "https://accounts.spotify.com/api/token"
+
+	req, err := http.NewRequest("POST", url, strings.NewReader(encodedData))
+
+	if err != nil {
+		return "", "", err
+	}
+
+	Authorization := helper.GenerateBasicToken()
+
+	req.Header.Add("Authorization", Authorization)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", "", err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return "", "", err
+	}
+
+	s := string(body)
+
+	dataResp := models.CallBackLoginResponse{}
+	err = json.Unmarshal([]byte(s), &dataResp)
+	if err != nil {
+		return "", "", err
+	}
+
+	// fmt.Println(string(dataResp.AccToken))
+	return dataResp.AccToken, dataResp.TokenRefresh, nil
+}
+
+func Refresh(token string) (string, error) {
+	data := url.Values{}
+	data.Set("grant_type", "refresh_token")
+	data.Set("refresh_token", token)
+	// data.Set("redirect_uri", redirect_uri)
 
 	encodedData := data.Encode()
 
@@ -142,7 +186,7 @@ func getTokenAuthByCode(code string) (string, error) {
 
 	s := string(body)
 
-	dataResp := models.CallBackLoginResponse{}
+	dataResp := models.RefreshToken{}
 	err = json.Unmarshal([]byte(s), &dataResp)
 	if err != nil {
 		return "", err

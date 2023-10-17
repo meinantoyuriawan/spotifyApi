@@ -1,8 +1,10 @@
 package helper
 
 import (
-	"bufio"
+	"fmt"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func WriteToken(AccToken string) {
@@ -14,13 +16,8 @@ func WriteToken(AccToken string) {
 
 	defer f.Close()
 
-	_, err = f.WriteString(AccToken)
+	storeToken(f, AccToken)
 
-	if err != nil {
-		panic(err)
-	}
-
-	f.Sync()
 }
 
 func ReadToken() string {
@@ -33,34 +30,51 @@ func ReadToken() string {
 	return string(Token)
 }
 
-func getClientConfig() []string {
-	filePath := "config.txt"
-	readFile, err := os.Open(filePath)
+func WriteRefreshToken(RefreshToken string) {
+	f, err := os.Create("refreshtoken.txt")
 
 	if err != nil {
-		return nil
+		panic(err)
 	}
 
-	fileScanner := bufio.NewScanner(readFile)
-	fileScanner.Split(bufio.ScanLines)
+	defer f.Close()
 
-	var fileLines []string
+	storeToken(f, RefreshToken)
+}
 
-	for fileScanner.Scan() {
-		fileLines = append(fileLines, fileScanner.Text())
+func ReadRefreshToken() string {
+	Token, err := os.ReadFile("refreshtoken.txt")
+
+	if err != nil {
+		return ""
 	}
 
-	readFile.Close()
-
-	return fileLines
+	return string(Token)
 }
 
 func GetClientID() string {
-	clientConfig := getClientConfig()
-	return clientConfig[0]
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("some error occured")
+	}
+	return os.Getenv("CLIENT_ID")
 }
 
 func GetClientSecret() string {
-	clientConfig := getClientConfig()
-	return clientConfig[1]
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("some error occured")
+	}
+	return os.Getenv("CLIENT_SECRET")
+}
+
+func storeToken(f *os.File, Token string) {
+
+	_, err := f.WriteString(Token)
+
+	if err != nil {
+		panic(err)
+	}
+
+	f.Sync()
 }

@@ -13,3 +13,7 @@ type CallBackLoginResponse struct {
 	Time         int    `json:"expires_in"`
 	TokenRefresh string `json:"refresh_token"`
 }
+
+type RefreshToken struct {
+	AccToken string `json:"access_token"`
+}

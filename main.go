@@ -26,9 +26,9 @@ func main() {
 
 	r.HandleFunc("/get-top/{type}", controller.GetUserTopDefault).Methods("GET")
 
-	// todo create recommendation and documentation
-
 	r.HandleFunc("/recommendations", controller.GetRecommendationArtist).Methods("GET")
+
+	r.HandleFunc("/refresh-token", controller.RefreshToken).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:8080"},
